@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>The Coffee.</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+        <script src="CoffeeMaker/Boiler.js"></script>
+        <script src="CoffeeMaker/Button.js"></script>
+        <script src="CoffeeMaker/LED.js"></script>
+        <script src="CoffeeMaker/WaterReservoir.js"></script>
+        <script src="CoffeeMaker/WaterLevelSensor.js"></script>
+        <script src="CoffeeMaker/HeatingElement.js"></script>
+        <script src="CoffeeMaker/CoffeeMaker.js"></script>
+    </head>
+    <body>
+        <div id="app" class="ui page grid">
+            <div class="three column row">
+                <div class="column">
+                    <div class="ui huge header">Coffee Maker</div>
+                </div>
+            </div>
+            <div class="two column row">
+                <div class="column">
+                    <div class="ui segment">
+                        <img class="ui centered small image" src="res/coffee_maker.jpg">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui segment">
+                        <div class="ui middle aligned divided list">
+                            <div class="item">Runtime: {{runtime}}s</div>
+                            <div class="item">Water Level: {{coffeeMaker.boiler.waterReservoir.waterLevel}}/{{coffeeMaker.boiler.waterReservoir.maxWaterLevel}}mL</div>
+                            <div class="item">Brewing: <template v-if="coffeeMaker.isBrewing()">Yes</template><template v-else>No</template></div>
+                            <div class="item">Brewing LED: <template v-if="coffeeMaker.indicatorLight.on">On</template><template v-else>Off</template></div>
+                            <div class="item">Boiler Temperature: {{coffeeMaker.boiler.heatingElement.temperature}}°c</div>
+                            <div class="item">eee</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column row">
+                <div class="column">
+                    <div v-if="messageText != ''" class="ui segment"  v-bind:class="{ green: messageType == 'normal', red: messageType == 'error' }">
+                        <p class="ui text green">{{messageText}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="column row">
+                <div class="column">
+                    <div class="ui middle aligned divided list">
+                        <div class="item">Primary Functionality</div>
+                        <div class="item">
+                            <button class="ui primary button" v-on:click="pressBrewButton()">Start Brewing</button>
+                            <button class="ui primary button" v-on:click="pressCancelBrewButton()">Cancel Brewing</button>
+                        </div>
+                    </div>
+                    <div class="ui middle aligned divided list">
+                        <div class="item">Add Ingredients</div>
+                        <div class="item">
+                            <button class="ui button" v-on:click="pressAddWaterButton()"> Add Water (100mL)</button>
+                            <button class="ui button" v-on:click="pressAddMilkButton()"> Add Milk (25mL)</button>
+                            <button class="ui button" v-on:click="pressAddSugarButton()"> Add Sugar (10mL)</button>
+                            <button class="ui button" v-on:click="pressAddCoffeeGroundsButton()"> Add Coffee Grounds (20mL)</button>
+                        </div>
+                    </div>
+                    <div class="ui middle aligned divided list">
+                        <div class="item">Carafe</div>
+                        <div class="item">
+                            <button class="ui button">Take Carafe Off Burner</button>
+                            <button class="ui button">Drink Coffee</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="main.js"></script>
+
+</html>
