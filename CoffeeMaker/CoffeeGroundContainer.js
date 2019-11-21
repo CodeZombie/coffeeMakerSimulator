@@ -40,4 +40,9 @@ class CoffeeGroundContainer {
         this.filterAdded = false
         this.amount = 0
     }
+    
+    reset() {
+        this.amount = 0
+        this.filterAdded = false
+    }
 }

@@ -62,6 +62,12 @@ class Carafe {
         if(this.condiments <0){
             this.condiments = 0
         }
+    }
 
+    reset() {
+        this.coffee = 0
+        this.condiments = 0
+        this.onBurner = true
+        this.temperature = 0
     }
 }

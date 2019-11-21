@@ -47,4 +47,9 @@ class Boiler {
     isOn() {
         return this.heatingElement.on
     }
+
+    reset() {
+        this.heatingElement.reset()
+        this.waterReservoir.reset()
+    }
 }

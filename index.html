@@ -51,9 +51,9 @@
                     </div>
                 </div>
             </div>
-            <div style="position: fixed; bottom:32px; right: 32px; z-index:999;" v-if="messageText != ''" class="ui negative message transition"  v-bind:class="{ green: messageType == 'normal', red: messageType == 'error' }">
+            <div style="position: fixed; bottom:32px; right: 32px; z-index:999;" v-if="messageText != ''" class="ui negative message transition"  v-bind:class="{ green: messageType != 'error', red: messageType == 'error' }">
                 <i class="close icon" v-on:click="messageText = ''"></i>
-                <div class="header">Error</div>
+                <div class="header">{{messageType}}</div>
                 <p>{{messageText}}</p>
             </div>
             <div class="column row">
@@ -61,36 +61,37 @@
                     <div class="ui middle aligned divided list">
                         <div class="item">Primary Functionality</div>
                         <div class="item">
-                            <button class="ui primary button" v-on:click="pressBrewButton()">Start Brewing</button>
-                            <button class="ui primary button" v-on:click="pressCancelBrewButton()">Cancel Brewing</button>
-                            <button class="ui green button" v-on:click="pressPourMilkButton()">Pour Milk</button>
-                            <button class="ui green button" v-on:click="pressPourSugarButton()">Pour Sugar</button>
-                            <button class="ui green button" v-on:click="pressPourCreamButton()">Pour Cream</button>
+                            <button  class="ui primary button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'startBrewing'}" v-on:click="pressBrewButton()">Start Brewing</button>
+                            <button class="ui primary button" v-bind:class="{'disabled': tutorialMode}" v-on:click="pressCancelBrewButton()">Cancel Brewing</button>
+                            <button class="ui green button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'pourMilk'}" v-on:click="pressPourMilkButton()">Pour Milk</button>
+                            <button class="ui green button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'pourSugar'}" v-on:click="pressPourSugarButton()">Pour Sugar</button>
+                            <button class="ui green button" v-bind:class="{'disabled': tutorialMode}"v-on:click="pressPourCreamButton()">Pour Cream</button>
+                            <button class="ui red button" v-on:click="pressToggleTutorialButton()">{{tutorialMode ? "Stop" : "Start"}} Tutorial</button>
 
                         </div>
                     </div>
                     <div class="ui middle aligned divided list">
                         <div class="item">Add Ingredients to machine</div>
                         <div class="item">
-                            <button class="ui button" v-on:click="pressAddWaterButton()"> Add Water (100mL)</button>
-                            <button class="ui button" v-on:click="pressAddMilkButton()"> Add Milk (25mL)</button>
-                            <button class="ui button" v-on:click="pressAddSugarButton()"> Add Sugar (10mL)</button>
-                            <button class="ui button" v-on:click="pressAddCreamButton()"> Add Cream (10mL)</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'addWater'}" v-on:click="pressAddWaterButton()"> Add Water (100mL)</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'addMilk'}" v-on:click="pressAddMilkButton()"> Add Milk (25mL)</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'addSugar'}" v-on:click="pressAddSugarButton()"> Add Sugar (10mL)</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode}"v-on:click="pressAddCreamButton()"> Add Cream (10mL)</button>
                         </div>
                     </div>
                     <div class="ui middle aligned divided list">
                         <div class="item">Coffee Grounds</div>
                         <div class="item">
-                            <button class="ui button" v-on:click="pressAddFilterButton()"> Add Filter</button>
-                            <button class="ui button" v-on:click="pressRemoveFilterButton()"> Remove Filter</button>
-                            <button class="ui button" v-on:click="pressAddCoffeeGroundsButton()"> Add Coffee Grounds (15mL)</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'addFilter'}" v-on:click="pressAddFilterButton()"> Add Filter</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode}" v-on:click="pressRemoveFilterButton()"> Remove Filter</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'addCoffee'}" v-on:click="pressAddCoffeeGroundsButton()"> Add Coffee Grounds (15mL)</button>
                         </div>
                     </div>
                     <div class="ui middle aligned divided list">
                         <div class="item">Carafe</div>
                         <div class="item">
-                            <button class="ui button">Take Carafe Off Burner</button>
-                            <button class="ui button" v-on:click="pressDrinkCoffeeButton()">Drink Coffee</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode}" v-on:click="pressToggleCarafeOnBurnerButton()">Take Carafe Off Burner</button>
+                            <button class="ui button" v-bind:class="{'disabled': tutorialMode && tutorialStage != 'drinkCoffee'}" v-on:click="pressDrinkCoffeeButton()">Drink Coffee</button>
                         </div>
                     </div>
                 </div>

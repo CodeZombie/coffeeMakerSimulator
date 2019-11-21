@@ -10,4 +10,8 @@ class LED{
     turnOff(){
         this.on = false
     }
+    
+    reset() {
+        this.turnOff()
+    }
 }

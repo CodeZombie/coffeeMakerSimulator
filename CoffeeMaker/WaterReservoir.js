@@ -20,4 +20,8 @@ class WaterReservoir {
         }
     }
 
+    reset() {
+        this.waterLevel = 0
+    }
+
 }

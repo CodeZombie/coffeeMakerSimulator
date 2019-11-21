@@ -15,16 +15,12 @@ class CoffeeMaker {
     constructor() {
         this.brewButton = new Button()
         this.indicatorLight = new LED();
-       // this.dripApparatus = new DripApparatus()
         this.boiler = new Boiler()
         this.milkContainer = new CondimentContainer("milk", 50)
         this.sugarContainer = new CondimentContainer("sugar", 25)
         this.creamContainer = new CondimentContainer("cream", 50)
-
         this.carafe = new Carafe();
-
         this.carafeBurner = new HeatingElement(55) //55 degrees C is a good drinking temperature.
-
         this.coffeeGroundContainer = new CoffeeGroundContainer(this.carafe)
     }
 
@@ -54,6 +50,17 @@ class CoffeeMaker {
                 this.carafe.temperature++
             }
         }
+    }
+
+    reset() {
+        this.indicatorLight.reset()
+        this.boiler.reset()
+        this.milkContainer.reset()
+        this.sugarContainer.reset()
+        this.creamContainer.reset()
+        this.carafe.reset()
+        this.carafeBurner.reset()
+        this.coffeeGroundContainer.reset()
     }
 
     brew() {

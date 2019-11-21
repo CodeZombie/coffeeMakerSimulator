@@ -20,4 +20,8 @@ class CondimentContainer {
             this.amount += amount
         }
     }
+
+    reset() {
+        this.amount = 0
+    }
 }

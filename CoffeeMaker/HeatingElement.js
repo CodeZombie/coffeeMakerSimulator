@@ -39,4 +39,8 @@ class HeatingElement {
     turnOff() {
         this.on = false;
     }
+    reset() {
+        this.on = false
+        this.temperature = 0
+    }
 }
