@@ -47,7 +47,7 @@ var coffeeMakerApp = new Vue({
         /* BUTTONS */
         pressBrewButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.brew();
+            message = this.coffeeMaker.brewButton.press();
             if(message){
                 this.showMessage(message.text, message.type);
             }

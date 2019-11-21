@@ -13,7 +13,16 @@ This class will contain all the other components that the coffee maker consists 
 
 class CoffeeMaker {
     constructor() {
-        this.brewButton = new Button()
+        this.brewButton = new Button(() => {
+            if(this.isBrewing()){
+                return {type: "error", text: "Cannot start brewing: Brew already in progress."}
+            }
+            if(this.coffeeGroundContainer.amount == 0){
+                return {type: "error", text: "Cannot start brewing: No coffee grounds inserted."}
+            }
+            var boilerError = this.boiler.start()
+            if(boilerError) {return boilerError }
+        })
         this.indicatorLight = new LED();
         this.boiler = new Boiler()
         this.milkContainer = new CondimentContainer("milk", 50)
@@ -61,17 +70,6 @@ class CoffeeMaker {
         this.carafe.reset()
         this.carafeBurner.reset()
         this.coffeeGroundContainer.reset()
-    }
-
-    brew() {
-        if(this.isBrewing()){
-            return {type: "error", text: "Cannot start brewing: Brew already in progress."}
-        }
-        if(this.coffeeGroundContainer.amount == 0){
-            return {type: "error", text: "Cannot start brewing: No coffee grounds inserted."}
-        }
-        var boilerError = this.boiler.start()
-        if(boilerError) {return boilerError }
     }
 
     stopBrewing() {
