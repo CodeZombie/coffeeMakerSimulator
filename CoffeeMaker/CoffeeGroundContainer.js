@@ -12,7 +12,6 @@ class CoffeeGroundContainer {
 
     recieveWater(amount){
         this.carafe.addCoffee(amount)
-        this.carafe.temperature++
     }
 
     addFilter() {

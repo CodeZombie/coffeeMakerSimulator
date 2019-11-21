@@ -39,6 +39,21 @@ class CoffeeMaker {
            this.boiler.stop();
         }
         this.boiler.step(this.coffeeGroundContainer)
+        this.carafeBurner.step()
+
+        if(this.carafe.onBurner && this.carafe.getTotalLiquid() > 0){
+            this.carafeBurner.turnOn();
+        }else{
+            this.carafeBurner.turnOff();
+        }
+
+        if(this.carafe.onBurner){
+            if(this.carafe.temperature > this.carafeBurner.temperature){
+                this.carafe.temperature--
+            }else if(this.carafe.temperature < this.carafeBurner.temperature){
+                this.carafe.temperature++
+            }
+        }
     }
 
     brew() {

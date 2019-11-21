@@ -44,7 +44,9 @@
                             <div class="item">Brewing: <template v-if="coffeeMaker.isBrewing()">Yes</template><template v-else>No</template></div>
                             <div class="item">Brewing LED: <template v-if="coffeeMaker.indicatorLight.on">On</template><template v-else>Off</template></div>
                             <div class="item">Boiler Temperature: {{coffeeMaker.boiler.heatingElement.temperature}}°c</div>
-                            <div class="item">eee</div>
+                            <div class="item">Burner temperature: {{ coffeeMaker.carafeBurner.temperature }} / {{ coffeeMaker.carafeBurner.maxTemperature }}°c</div>
+                            <div class="item">Carafe temperature: {{ coffeeMaker.carafe.temperature }} / {{ coffeeMaker.carafeBurner.maxTemperature }}°c</div>
+                            <div class="item">Liquid in Carafe: {{ coffeeMaker.carafe.getTotalLiquid() }} / {{ coffeeMaker.carafe.maxAmount }}mL</div>
                         </div>
                     </div>
                 </div>
