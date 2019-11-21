@@ -47,21 +47,21 @@ var coffeeMakerApp = new Vue({
         /* BUTTONS */
         pressBrewButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.brewButton.press();
+            var message = this.coffeeMaker.brewButton.press();
             if(message){
                 this.showMessage(message.text, message.type);
             }
         },
         pressCancelBrewButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.stopBrewing();
+            var message = this.coffeeMaker.turnOff();
             if(message){
                 this.showMessage(message.text, message.type);
             }
         },
         pressAddWaterButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.addWater(100);
+            var message = this.coffeeMaker.waterContainer.add(100);
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -71,7 +71,7 @@ var coffeeMakerApp = new Vue({
         },
         pressAddMilkButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.milkContainer.add(10)
+            var message = this.coffeeMaker.milkContainer.add(10)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -81,14 +81,14 @@ var coffeeMakerApp = new Vue({
         },
         pressAddCreamButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.creamContainer.add(10)
+            var message = this.coffeeMaker.creamContainer.add(10)
             if(message){
                 this.showMessage(message.text, message.type);
             }
         },
         pressAddSugarButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.sugarContainer.add(5)
+            var message = this.coffeeMaker.sugarContainer.add(5)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -98,7 +98,7 @@ var coffeeMakerApp = new Vue({
         },
         pressAddFilterButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.coffeeGroundContainer.addFilter()
+            var message = this.coffeeMaker.coffeeGroundContainer.addFilter()
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -108,14 +108,14 @@ var coffeeMakerApp = new Vue({
         },
         pressRemoveFilterButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.coffeeGroundContainer.removeFilter()
+            var message = this.coffeeMaker.coffeeGroundContainer.removeFilter()
             if(message){
                 this.showMessage(message.text, message.type);
             }
         },
         pressAddCoffeeGroundsButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.coffeeGroundContainer.addGrounds(15)
+            var message = this.coffeeMaker.coffeeGroundContainer.add(15)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -125,7 +125,7 @@ var coffeeMakerApp = new Vue({
         },
         pressDrinkCoffeeButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.carafe.removeLiquid(15)
+            var message = this.coffeeMaker.carafe.remove(15)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -135,7 +135,7 @@ var coffeeMakerApp = new Vue({
         },
         pressPourMilkButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.pourMilk(5)
+            var message = this.coffeeMaker.milkContainer.dispense(5)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -145,7 +145,7 @@ var coffeeMakerApp = new Vue({
         },
         pressPourSugarButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.pourSugar(5)
+            var message = this.coffeeMaker.sugarContainer.dispense(5)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -155,7 +155,7 @@ var coffeeMakerApp = new Vue({
         },
         pressPourCreamButton: function() {
             this.clearMessage();
-            message = this.coffeeMaker.pourCream(5)
+            var message = this.coffeeMaker.creamContainer.dispense(5)
             if(message){
                 this.showMessage(message.text, message.type);
             }
@@ -168,6 +168,18 @@ var coffeeMakerApp = new Vue({
                 this.tutorialMode = true
                 this.tutorialStage = 'addFilter'
                 this.coffeeMaker.reset()
+            }
+        }, 
+        pressToggleCarafeOnBurnerButton: function() {
+            this.clearMessage();
+            var message
+            if(this.coffeeMaker.carafe.onBurner){
+                message = this.coffeeMaker.carafe.takeOffBurner()
+            }else{
+                message = this.coffeeMaker.carafe.putOnBurner()
+            }
+            if(message){
+                this.showMessage(message.text, message.type);
             }
         }
     }

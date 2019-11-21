@@ -13,81 +13,102 @@ This class will contain all the other components that the coffee maker consists 
 
 class CoffeeMaker {
     constructor() {
+        //Brew button.
         this.brewButton = new Button(() => {
-            if(this.isBrewing()){
-                return {type: "error", text: "Cannot start brewing: Brew already in progress."}
-            }
-            if(this.coffeeGroundContainer.amount == 0){
-                return {type: "error", text: "Cannot start brewing: No coffee grounds inserted."}
-            }
-            var boilerError = this.boiler.start()
-            if(boilerError) {return boilerError }
+            return this.turnOn()
         })
-        this.indicatorLight = new LED();
-        this.boiler = new Boiler()
-        this.milkContainer = new CondimentContainer("milk", 50)
-        this.sugarContainer = new CondimentContainer("sugar", 25)
-        this.creamContainer = new CondimentContainer("cream", 50)
-        this.carafe = new Carafe();
-        this.carafeBurner = new HeatingElement(55) //55 degrees C is a good drinking temperature.
-        this.coffeeGroundContainer = new CoffeeGroundContainer(this.carafe)
+
+        this.burnerLight = new LED();
+        this.boilerLight = new LED();
+
+        //Carafe
+        this.carafe = new Carafe(300)
+        this.carafe.attachHeatingElement(new HeatingElement(55))
+
+        //Coffee Ground Container. Pours into Carafe
+        this.coffeeGroundContainer = new CoffeeGroundContainer(50)
+        this.coffeeGroundContainer.attachTo(this.carafe)
+        this.coffeeGroundContainer.coffeeBrewContainer.attachTo(this.carafe)
+
+        //Water Container. Pours into Coffee Ground Container
+        this.waterContainer = new Reservoir(750)
+        this.waterContainer.attachHeatingElement(new HeatingElement(120))
+        this.waterContainer.attachTo(this.coffeeGroundContainer.coffeeBrewContainer);
+        
+
+
+        //Condiments
+        this.milkContainer = new Reservoir(50)
+        this.milkContainer.attachTo(this.carafe)
+
+        this.sugarContainer = new Reservoir(50)
+        this.sugarContainer.attachTo(this.carafe)
+
+        this.creamContainer = new Reservoir(50)
+        this.creamContainer.attachTo(this.carafe)
     }
 
     step() {
-        //step for all components.
         if(this.isBrewing()){
-            this.indicatorLight.turnOn();
+            this.boilerLight.turnOn();
         }else{
-            this.indicatorLight.turnOff();
-        }
-        if(!this.coffeeGroundContainer.canDrip()){
-           this.boiler.stop();
-        }
-        this.boiler.step(this.coffeeGroundContainer)
-        this.carafeBurner.step()
-
-        if(this.carafe.onBurner && this.carafe.getTotalLiquid() > 0){
-            this.carafeBurner.turnOn();
-        }else{
-            this.carafeBurner.turnOff();
+            this.boilerLight.turnOff();
         }
 
-        if(this.carafe.onBurner){
-            if(this.carafe.temperature > this.carafeBurner.temperature){
-                this.carafe.temperature--
-            }else if(this.carafe.temperature < this.carafeBurner.temperature){
-                this.carafe.temperature++
-            }
+        if(this.carafe.heatingElement.on){
+            this.burnerLight.turnOn()
+        }else{
+            this.burnerLight.turnOff()
         }
+
+        //if the coffee ground container is unable to drip...
+        if(!this.coffeeGroundContainer.canDispense()){
+           this.waterContainer.heatingElement.turnOff();
+        }
+
+        this.coffeeGroundContainer.step()
+
+        this.waterContainer.step()
+        this.carafe.step()
     }
 
     reset() {
         this.indicatorLight.reset()
-        this.boiler.reset()
+        this.waterContainer.reset()
         this.milkContainer.reset()
         this.sugarContainer.reset()
         this.creamContainer.reset()
-        this.carafe.reset()
-        this.carafeBurner.reset()
         this.coffeeGroundContainer.reset()
+        this.carafe.reset()
     }
 
-    stopBrewing() {
-        if(!this.isBrewing()){
-            return {type: "error", text: "Cannot cancel brewing: No brew in progress.."}
+    turnOn() {
+        if(this.isBrewing()){
+            return {type: "error", text: "Cannot start brewing: Brew already in progress."}
         }
-        var boilerError = this.boiler.stop();
-        if(boilerError) {return boilerError }
+        if(this.coffeeGroundContainer.levelSensor.level() == 0){
+            return {type: "error", text: "Cannot start brewing: No coffee grounds inserted."}
+        }
+        if(!this.carafe.onBurner) {
+            return {type: "error", text: "Cannot start brewing when carafe is off burner."}
+        }
+        var error = this.waterContainer.turnOnHeatingElement()
+        if(error) { return error }
     }
 
-    addWater(amount) {
-        return this.boiler.addWater(amount);
+    turnOff() {
+        if(!this.isBrewing()){
+            return {type: "error", text: "Cannot cancel brewing: No brew in progress."}
+        }
+        var error = this.waterContainer.heatingElement.turnOff();
+        if(error) {return error }
     }
 
     isBrewing() {
-        return this.boiler.isOn()
+        return this.waterContainer.heatingElement.on
     }
 
+    /*
     pourMilk(amount) {
         //if theres enough room
         if(this.carafe.getFreeSpace() < amount){
@@ -119,5 +140,5 @@ class CoffeeMaker {
         if(dispenseMessage){ return dispenseMessage }
         var pourMessage = this.carafe.addCondiment(amount)
         if(pourMessage) {return pourMessage}
-    }
+    }*/
   }

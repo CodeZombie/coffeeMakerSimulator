@@ -1,17 +1,38 @@
-class CoffeeGroundContainer {
-    constructor(carafe) {
-        this.amount = 0
-        this.maxAmount = 50
+class CoffeeGroundContainer extends Reservoir {
+    constructor(maxAmount) {
+        super(maxAmount);
         this.filterAdded = false
-        this.carafe = carafe
+        this.coffeeBrewContainer = new Reservoir(50)
+        this.slowCounter = 0
     }
 
-    canDrip(){
-        return this.carafe.onBurner && !this.carafe.isFull() && this.amount > 0
+    step(){
+        super.step()
+        this.slowCounter++
+        if(this.slowCounter>2){
+            if(this.canDispense()){
+                this.coffeeBrewContainer.dispense(1)
+            }
+            this.slowCounter=0;
+        }
+
     }
 
-    recieveWater(amount){
-        this.carafe.addCoffee(amount)
+    canDispense(){
+        if(this.levelSensor.level() == 0){
+            return false
+        }
+        if(!this.attachedTo.onBurner){
+            return false
+        }
+        return super.canDispense()
+    }
+
+    add(amount){
+        if(this.filterAdded == false){
+            return {type:"error", text:"Cannot add coffee grounds without a filter inserted."}
+        }
+        return super.add(amount)
     }
 
     addFilter() {
@@ -22,27 +43,15 @@ class CoffeeGroundContainer {
         }
     }
 
-    addGrounds(amount){
-        if(this.filterAdded == false){
-            return {type:"error", text:"Cannot add coffee grounds without a filter inserted."}
-        }
-        if(this.amount + amount > this.maxAmount){
-            return {type:"error", text:"Cannot add that many coffee grounds. Container is too full."}
-        }else{
-            this.amount += amount
-        }
-    }
-
     removeFilter() {
         if(this.filterAdded == false){
             return {type:"error", text:"Cannot remove coffee filter. None has been inserted."}
         }
         this.filterAdded = false
-        this.amount = 0
+        this.empty()
     }
     
     reset() {
-        this.amount = 0
-        this.filterAdded = false
+        this.removeFilter();
     }
 }

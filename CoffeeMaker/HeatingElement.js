@@ -24,7 +24,8 @@ class HeatingElement {
             }
         }
     }
-
+    
+    //maybe get rid of this method and just temperature--, because temps can be negative!
     reduceTemperature(amount){
         this.temperature -= amount;
         if(this.temperature < 0){
@@ -39,6 +40,7 @@ class HeatingElement {
     turnOff() {
         this.on = false;
     }
+
     reset() {
         this.on = false
         this.temperature = 0
