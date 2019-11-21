@@ -35,8 +35,8 @@ class CoffeeMaker {
         }else{
             this.indicatorLight.turnOff();
         }
-        if(this.coffeeGroundContainer.canDrip()){
-           // this.boiler.
+        if(!this.coffeeGroundContainer.canDrip()){
+           this.boiler.stop();
         }
         this.boiler.step(this.coffeeGroundContainer)
     }

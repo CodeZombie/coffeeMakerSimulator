@@ -7,7 +7,7 @@ class CoffeeGroundContainer {
     }
 
     canDrip(){
-        return this.carafe.onBurner && !this.carafe.isFull()
+        return this.carafe.onBurner && !this.carafe.isFull() && this.amount > 0
     }
 
     recieveWater(amount){
