@@ -10,29 +10,37 @@
         <script src="CoffeeMaker/Boiler.js"></script>
         <script src="CoffeeMaker/Button.js"></script>
         <script src="CoffeeMaker/LED.js"></script>
+        <script src="CoffeeMaker/Carafe.js"></script>
+        <script src="CoffeeMaker/CoffeeGroundContainer.js"></script>
+        <script src="CoffeeMaker/CondimentContainer.js"></script>
         <script src="CoffeeMaker/WaterReservoir.js"></script>
         <script src="CoffeeMaker/WaterLevelSensor.js"></script>
         <script src="CoffeeMaker/HeatingElement.js"></script>
         <script src="CoffeeMaker/CoffeeMaker.js"></script>
+        <script src="lib/CoffeeCanvas.js"></script>
     </head>
     <body>
         <div id="app" class="ui page grid">
-            <div class="three column row">
+            <div class="column row">
                 <div class="column">
-                    <div class="ui huge header">Coffee Maker</div>
+                    <div class="ui huge header">Coffee Maker<span style="font-size: 1.25rem; color:grey"> - Jeremy Clark, Upma Sharma, Marco Hidalgo</span></div>
                 </div>
             </div>
             <div class="two column row">
                 <div class="column">
                     <div class="ui segment">
-                        <img class="ui centered small image" src="res/coffee_maker.jpg">
+                        <canvas id="coffeeCanvas" style="width:65%; height:65%;"></canvas> 
                     </div>
                 </div>
                 <div class="column">
                     <div class="ui segment">
                         <div class="ui middle aligned divided list">
-                            <div class="item">Runtime: {{runtime}}s</div>
+                            <div class="item">Runtime: {{runtime}} ms</div>
                             <div class="item">Water Level: {{coffeeMaker.boiler.waterReservoir.waterLevel}}/{{coffeeMaker.boiler.waterReservoir.maxWaterLevel}}mL</div>
+                            <div class="item">Milk Level: {{coffeeMaker.milkContainer.amount}}/{{coffeeMaker.milkContainer.maxAmount}}mL</div>
+                            <div class="item">Sugar Level: {{coffeeMaker.sugarContainer.amount}}/{{coffeeMaker.sugarContainer.maxAmount}}mL</div>
+                            <div class="item">Cream Level: {{coffeeMaker.creamContainer.amount}}/{{coffeeMaker.creamContainer.maxAmount}}mL</div>
+                            <div class="item">Coffee Grounds: {{coffeeMaker.coffeeGroundContainer.amount}}/{{coffeeMaker.coffeeGroundContainer.maxAmount}}mL</div>
                             <div class="item">Brewing: <template v-if="coffeeMaker.isBrewing()">Yes</template><template v-else>No</template></div>
                             <div class="item">Brewing LED: <template v-if="coffeeMaker.indicatorLight.on">On</template><template v-else>Off</template></div>
                             <div class="item">Boiler Temperature: {{coffeeMaker.boiler.heatingElement.temperature}}°c</div>
@@ -41,12 +49,10 @@
                     </div>
                 </div>
             </div>
-            <div class="column row">
-                <div class="column">
-                    <div v-if="messageText != ''" class="ui segment"  v-bind:class="{ green: messageType == 'normal', red: messageType == 'error' }">
-                        <p class="ui text green">{{messageText}}</p>
-                    </div>
-                </div>
+            <div style="position: fixed; bottom:32px; right: 32px; z-index:999;" v-if="messageText != ''" class="ui negative message transition"  v-bind:class="{ green: messageType == 'normal', red: messageType == 'error' }">
+                <i class="close icon" v-on:click="messageText = ''"></i>
+                <div class="header">Error</div>
+                <p>{{messageText}}</p>
             </div>
             <div class="column row">
                 <div class="column">
@@ -55,22 +61,34 @@
                         <div class="item">
                             <button class="ui primary button" v-on:click="pressBrewButton()">Start Brewing</button>
                             <button class="ui primary button" v-on:click="pressCancelBrewButton()">Cancel Brewing</button>
+                            <button class="ui green button" v-on:click="pressPourMilkButton()">Pour Milk</button>
+                            <button class="ui green button" v-on:click="pressPourSugarButton()">Pour Sugar</button>
+                            <button class="ui green button" v-on:click="pressPourCreamButton()">Pour Cream</button>
+
                         </div>
                     </div>
                     <div class="ui middle aligned divided list">
-                        <div class="item">Add Ingredients</div>
+                        <div class="item">Add Ingredients to machine</div>
                         <div class="item">
                             <button class="ui button" v-on:click="pressAddWaterButton()"> Add Water (100mL)</button>
                             <button class="ui button" v-on:click="pressAddMilkButton()"> Add Milk (25mL)</button>
                             <button class="ui button" v-on:click="pressAddSugarButton()"> Add Sugar (10mL)</button>
-                            <button class="ui button" v-on:click="pressAddCoffeeGroundsButton()"> Add Coffee Grounds (20mL)</button>
+                            <button class="ui button" v-on:click="pressAddCreamButton()"> Add Cream (10mL)</button>
+                        </div>
+                    </div>
+                    <div class="ui middle aligned divided list">
+                        <div class="item">Coffee Grounds</div>
+                        <div class="item">
+                            <button class="ui button" v-on:click="pressAddFilterButton()"> Add Filter</button>
+                            <button class="ui button" v-on:click="pressRemoveFilterButton()"> Remove Filter</button>
+                            <button class="ui button" v-on:click="pressAddCoffeeGroundsButton()"> Add Coffee Grounds (15mL)</button>
                         </div>
                     </div>
                     <div class="ui middle aligned divided list">
                         <div class="item">Carafe</div>
                         <div class="item">
                             <button class="ui button">Take Carafe Off Burner</button>
-                            <button class="ui button">Drink Coffee</button>
+                            <button class="ui button" v-on:click="pressDrinkCoffeeButton()">Drink Coffee</button>
                         </div>
                     </div>
                 </div>

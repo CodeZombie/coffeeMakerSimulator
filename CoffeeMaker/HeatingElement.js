@@ -4,21 +4,21 @@ An element that can move between 0 and 100 degrees celsius when turned on.
 */
 
 class HeatingElement {
-    constructor() {
+    constructor(maxTemperature) {
         this.on = false;
         this.temperature = 0;
-        this.maxTemperature = 100;
+        this.maxTemperature = maxTemperature;
     }
 
     step(){
         //Heats up or cools down.
         if(this.on){
-            this.temperature += 25;
+            this.temperature += 1
             if(this.temperature > this.maxTemperature){
                 this.temperature = this.maxTemperature
             }
         }else{
-            this.temperature -= 15
+            this.temperature -= 1
             if(this.temperature < 0){
                 this.temperature = 0
             }

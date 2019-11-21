@@ -1,6 +1,14 @@
 /*
 The Coffee Maker class.
 This class will contain all the other components that the coffee maker consists of.
+    HOW IT WORKS:
+        The user places all the ingredients in the machine, then presses the Brew button.
+        The boiler will turn on the heating element which will bring the water up to a boiling temperature.
+        The boiler will push the water into the CoffeeGroundContainer, which will convert the water into coffee,
+            and drip into the carafe.
+        Once there is liquid in the Carafe, the heating plate will turn on and try to keep the coffee
+            at a set temperature.
+        The user can then dispense milk, cream, or sugar into the carafe.
 */
 
 class CoffeeMaker {
@@ -9,6 +17,15 @@ class CoffeeMaker {
         this.indicatorLight = new LED();
        // this.dripApparatus = new DripApparatus()
         this.boiler = new Boiler()
+        this.milkContainer = new CondimentContainer("milk", 50)
+        this.sugarContainer = new CondimentContainer("sugar", 25)
+        this.creamContainer = new CondimentContainer("cream", 50)
+
+        this.carafe = new Carafe();
+
+        this.carafeBurner = new HeatingElement(55) //55 degrees C is a good drinking temperature.
+
+        this.coffeeGroundContainer = new CoffeeGroundContainer(this.carafe)
     }
 
     step() {
@@ -18,13 +35,18 @@ class CoffeeMaker {
         }else{
             this.indicatorLight.turnOff();
         }
-
-        this.boiler.step()
+        if(this.coffeeGroundContainer.canDrip()){
+           // this.boiler.
+        }
+        this.boiler.step(this.coffeeGroundContainer)
     }
 
     brew() {
         if(this.isBrewing()){
             return {type: "error", text: "Cannot start brewing: Brew already in progress."}
+        }
+        if(this.coffeeGroundContainer.amount == 0){
+            return {type: "error", text: "Cannot start brewing: No coffee grounds inserted."}
         }
         var boilerError = this.boiler.start()
         if(boilerError) {return boilerError }
@@ -44,5 +66,38 @@ class CoffeeMaker {
 
     isBrewing() {
         return this.boiler.isOn()
+    }
+
+    pourMilk(amount) {
+        //if theres enough room
+        if(this.carafe.getFreeSpace() < amount){
+            return {type: "error", text: "Cannot dispense " + amount + "ml of milk. Not enough space in carafe"}
+        }
+        var dispenseMessage = this.milkContainer.dispense(amount)
+        if(dispenseMessage){ return dispenseMessage }
+        var pourMessage = this.carafe.addCondiment(amount)
+        if(pourMessage) {return pourMessage}
+    }
+
+    pourSugar(amount) {
+        //if theres enough room
+        if(this.carafe.getFreeSpace() < amount){
+            return {type: "error", text: "Cannot dispense " + amount + "ml of sugar. Not enough space in carafe"}
+        }
+        var dispenseMessage = this.sugarContainer.dispense(amount)
+        if(dispenseMessage){ return dispenseMessage }
+        var pourMessage = this.carafe.addCondiment(amount)
+        if(pourMessage) {return pourMessage}
+    }
+
+    pourCream(amount) {
+        //if theres enough room
+        if(this.carafe.getFreeSpace() < amount){
+            return {type: "error", text: "Cannot dispense " + amount + "ml of cream. Not enough space in carafe"}
+        }
+        var dispenseMessage = this.creamContainer.dispense(amount)
+        if(dispenseMessage){ return dispenseMessage }
+        var pourMessage = this.carafe.addCondiment(amount)
+        if(pourMessage) {return pourMessage}
     }
   }

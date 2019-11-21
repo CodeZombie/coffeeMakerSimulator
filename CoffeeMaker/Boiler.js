@@ -5,15 +5,18 @@ Boils the water and sends it out through any generic function passed to it.
 
 class Boiler {
     constructor(dripApparatus) {
-        this.heatingElement = new HeatingElement()
+        this.heatingElement = new HeatingElement(120) //120 is a good temperature to boil the water at.
         this.waterReservoir = new WaterReservoir()
         this.dripApparatus = dripApparatus
     }
 
-    step() {
+    step(coffeeGroundContainer) {
         this.heatingElement.step()
         if(this.heatingElement.temperature >= 100){ //if the heating element is at boiling temp...
-            this.waterReservoir.removeWater(25)
+            if(coffeeGroundContainer.canDrip()){
+                coffeeGroundContainer.recieveWater(1)
+                this.waterReservoir.removeWater(1)
+            }
         }
         if(this.waterReservoir.waterLevelSensor.waterLevel() == 0){
             this.heatingElement.turnOff();
