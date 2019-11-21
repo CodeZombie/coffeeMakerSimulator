@@ -162,9 +162,13 @@ var coffeeMakerApp = new Vue({
         },
         pressToggleTutorialButton: function() {
             this.clearMessage();
-            this.tutorialMode = true
-            this.tutorialStage = 'addFilter'
-            this.coffeeMaker.reset()
+            if(this.tutorialMode){
+                this.tutorialMode = false
+            }else{
+                this.tutorialMode = true
+                this.tutorialStage = 'addFilter'
+                this.coffeeMaker.reset()
+            }
         }
     }
 });
