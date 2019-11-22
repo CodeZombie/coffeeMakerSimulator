@@ -30,7 +30,7 @@ var coffeeMakerApp = new Vue({
             this.coffeeMaker.step();
 
             if(this.tutorialMode){
-                if(this.tutorialStage == 'startBrewing' && this.coffeeMaker.carafe.getTotalLiquid() > 0){
+                if(this.tutorialStage == 'startBrewing' && this.coffeeMaker.carafe.levelSensor.level() > 0){
                     this.tutorialStage = 'pourMilk'
                 }
                 this.showMessage(this.tutorialStages[this.tutorialStage], "tutorial")

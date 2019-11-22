@@ -73,7 +73,8 @@ class CoffeeMaker {
     }
 
     reset() {
-        this.indicatorLight.reset()
+        this.boilerLight.reset()
+        this.burnerLight.reset()
         this.waterContainer.reset()
         this.milkContainer.reset()
         this.sugarContainer.reset()
